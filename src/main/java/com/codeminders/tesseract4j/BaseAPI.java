@@ -1,33 +1,44 @@
 package com.codeminders.tesseract4j;
 
-import org.bridj.Pointer;
+import com.codeminders.tesseract4j.mapping.CAPI;
+import com.codeminders.tesseract4j.mapping.structs.TessBaseAPI;
 
-import com.codeminders.tesseract4j.bridj.CAPI;
-import com.codeminders.tesseract4j.bridj.structs.TessBaseAPI;
+public class BaseAPI {
+    
+    private TessBaseAPI handle;
+    private CAPI api = CAPI.INSTANCE;
 
-public class BaseAPI extends CAPI {
-
-    private Pointer<TessBaseAPI> handle;
-
-    public BaseAPI(String datapath, String language) {
-        handle = this.TessBaseAPICreate();
-        TessBaseAPIInit3(handle, Pointer.pointerToCString(datapath), Pointer.pointerToCString(language));
+    public BaseAPI(String datapath, String language){
+        handle = api.TessBaseAPICreate();
+        api.TessBaseAPIInit3(handle, datapath, language);
     }
 
     public BaseAPI(String language) {
         this(null, language);
     }
+    
+    @Override
+    protected void finalize() throws Throwable {
+        if(handle != null){
+            api.TessBaseAPIDelete(handle);
+        }
+    }
 
     public void clear() {
-        TessBaseAPIClear(handle);
+        if(handle != null){
+            api.TessBaseAPIClear(handle);
+        }
     }
 
     public void end() {
-        TessBaseAPIEnd(handle);
+        if(handle != null){
+            api.TessBaseAPIEnd(handle);
+        }
     }
-
+    
     public String version() {
-        return TessVersion().getCString();
+        return api.TessVersion();
+        
     }
-
+    
 }

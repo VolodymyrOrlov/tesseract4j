@@ -1,11 +1,11 @@
-package com.codeminders.tesseract4j.bridj.structs;
+package com.codeminders.tesseract4j.mapping.structs;
 
-import org.bridj.Pointer;
-import org.bridj.StructObject;
+import com.sun.jna.Pointer;
+import com.sun.jna.PointerType;
 
-public class TessBaseAPI extends StructObject {
+public class TessBaseAPI extends PointerType {
 	
-	public TessBaseAPI(Pointer<? extends StructObject> address) {
+	public TessBaseAPI(Pointer address) {
         super(address);
     }
 
