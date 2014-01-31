@@ -1,5 +1,12 @@
 package com.codeminders.tesseract4j;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+import javax.imageio.ImageIO;
+
 import com.codeminders.tesseract4j.mapping.CAPI;
 import com.codeminders.tesseract4j.mapping.structs.TessBaseAPI;
 
@@ -39,6 +46,22 @@ public class BaseAPI {
     public String version() {
         return api.TessVersion();
         
+    }
+    
+    public String tesseractRect(ByteBuffer imageData, int bytesPerPixel, int bytesPerLine, int left, int top, int width, int height){
+        return Utils.normalizeOutput(api.TessBaseAPIRect(handle, imageData, bytesPerPixel, bytesPerLine, left, top, width, height));
+    }
+    
+    public String tesseractRect(BufferedImage image) throws IOException, InterruptedException{
+        return tesseractRect(Utils.bufferedImageToByteArray(Utils.getTwoLevelImage(image)), 4, image.getWidth() * 4, 0, 0, image.getWidth(), image.getHeight());
+    }
+    
+    public String tesseractRect(File image) throws IOException, InterruptedException{
+        return tesseractRect(ImageIO.read(image));
+    }
+    
+    public String getUTF8Text(){
+        return api.TessBaseAPIGetUTF8Text(handle);
     }
     
 }
